@@ -7,7 +7,7 @@ interface IOracle {
     function oracleValues(string memory key) external view returns (string memory value, uint256 blockNumber);
 }
 
-contract TokenSwap {
+contract ThreeSwap {
     enum TokenType { WBTC, WETH, USDC }
 
     IERC20[3] public tokens;

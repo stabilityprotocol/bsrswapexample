@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@nomicfoundation/hardhat-ignition-ethers": "^0.15.5"
+  }
+}
