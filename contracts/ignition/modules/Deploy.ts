@@ -14,8 +14,11 @@ const deployment = buildModule("TokenSwap", (m) => {
   const mintAmount = parseInt("1000000000", 18); // 1,000,000,000 with 18 decimals
 
   m.call(usdc, "mint", [threeSwap, mintAmount]);
+  console.log("Minted USDC");
   m.call(wbtc, "mint", [threeSwap, mintAmount]);
+  console.log("Minted WBTC");
   m.call(weth, "mint", [threeSwap, mintAmount]);
+  console.log("Minted WETH");
   console.log("Deployment complete");
   return { threeSwap };
 });

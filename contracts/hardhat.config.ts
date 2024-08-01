@@ -13,6 +13,11 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 1337,
     },
+    stabletestnet: {
+      url: "https://free.testnet.stabilityprotocol.com/zgt/othw108bixk1",
+      accounts: [],
+      hardfork: "shanghai",
+    },
     localhost: {
       url: "http://127.0.0.1:8545",
     },

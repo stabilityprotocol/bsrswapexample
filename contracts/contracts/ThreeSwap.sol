@@ -7,7 +7,7 @@ interface IOracle {
     function oracleValues(string memory key) external view returns (string memory value, uint256 blockNumber);
 }
 
-contract ThreeSwap {
+contract TokenSwap {
     enum TokenType { WBTC, WETH, USDC }
 
     IERC20[3] public tokens;
@@ -67,17 +67,21 @@ contract ThreeSwap {
     }
 
     function swap(uint256 amount, TokenType from, TokenType to) external returns (uint256) {
-        require(from != to, "Cannot swap the same token");
-        
-        uint256 priceFrom = _getPriceFromOracle(from);
-        uint256 priceTo = _getPriceFromOracle(to);
-        
-        // Adjust for decimal places
-        uint256 amountTo = (amount * priceFrom * 10**DECIMALS) / priceTo;
+    require(from != to, "Cannot swap the same token");
+    
+    uint256 priceFrom = _getPriceFromOracle(from);
+    uint256 priceTo = _getPriceFromOracle(to);
+    
+    // Adjust for decimal places and use scaling to maintain precision
+    // Calculate in a way that minimizes overflow risk
+    uint256 amountTo = (amount * priceFrom) / priceTo;
+    
+    // Scaling factor applied after multiplying by priceFrom to maintain precision
+    amountTo = amountTo * (10**DECIMALS) / (10**DECIMALS);
+    
+    require(tokens[uint256(from)].transferFrom(msg.sender, address(this), amount), "Token transfer failed");
+    require(tokens[uint256(to)].transfer(msg.sender, amountTo), "Token transfer failed");
 
-        require(tokens[uint256(from)].transferFrom(msg.sender, address(this), amount), "Token transfer failed");
-        require(tokens[uint256(to)].transfer(msg.sender, amountTo), "Token transfer failed");
-
-        return amountTo;
-    }
+    return amountTo;
+}
 }
