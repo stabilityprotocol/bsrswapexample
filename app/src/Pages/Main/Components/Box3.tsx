@@ -139,9 +139,13 @@ export const Box3 = () => {
 
   useEffect(() => {
     const fn = (ev: MessageEvent) => {
-      const data = JSON.parse(ev.data) as { type: string };
-      if (data.type !== "update") return;
-      token0.refetch();
+      try {
+        const data = JSON.parse(ev.data) as { type: string };
+        if (data.type !== "update") return;
+        token0.refetch();
+      } catch (e) {
+        console.error("IGNORE THIS:", e);
+      }
     };
     window.addEventListener("message", fn);
 
