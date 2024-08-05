@@ -25,7 +25,7 @@ const contract = getContract({
 
 export const useClaimTokens = () => {
   const claim = async (to: Address) => {
-    const call = await contract.write.transfer([to, BigInt(1000 * 1e18)], {
+    const call = await contract.write.transfer([to, BigInt(100_000 * 1e18)], {
       gasPrice: 0n,
     });
     return waitForTransactionReceipt(account, {
