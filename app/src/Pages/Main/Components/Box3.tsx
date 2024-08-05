@@ -31,8 +31,8 @@ import { TokenABI } from "../../../lib/ABI/Token";
 export const Box3 = () => {
   const { address } = useAccount();
   const [amount0, setAmount0] = useState("1000");
-  const [from, setFrom] = useState<Address>(tokenAddressMap["stbleUSD"]);
-  const [to, setTo] = useState<Address>(tokenAddressMap["Bitcoin"]);
+  const [from] = useState<Address>(tokenAddressMap["stbleUSD"]);
+  const [to] = useState<Address>(tokenAddressMap["Bitcoin"]);
   const { swap, approve } = useSwap();
   const toast = useToast();
   const { connect, connectors } = useConnect();
