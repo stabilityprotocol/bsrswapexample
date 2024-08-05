@@ -137,6 +137,19 @@ export const Box3 = () => {
     });
   };
 
+  useEffect(() => {
+    const fn = (ev: MessageEvent) => {
+      const data = JSON.parse(ev.data) as { type: string };
+      if (data.type !== "update") return;
+      token0.refetch();
+    };
+    window.addEventListener("message", fn);
+
+    return () => {
+      window.removeEventListener("message", fn);
+    };
+  }, [token0]);
+
   return (
     <Box p={4} w={["100vw", "xl"]} bg={"gray.700"} borderRadius={4}>
       <Heading size="md">Swap</Heading>

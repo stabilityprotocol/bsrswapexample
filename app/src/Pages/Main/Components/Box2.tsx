@@ -35,6 +35,9 @@ export const Box2 = () => {
         description: "There was an error claiming stbleUSD",
       },
     });
+    p.then(() => {
+      window.postMessage(JSON.stringify({ type: "update" }), "*");
+    });
   };
 
   return (
