@@ -4,7 +4,7 @@ import { Address } from "viem";
 import { TokenABI } from "../lib/ABI/Token";
 import { waitForTransactionReceipt } from "viem/actions";
 
-export const CONTRACT_ADDRESS = "0xE22718ab9bceCBC12aEfB276C813f590CFA6a982";
+export const CONTRACT_ADDRESS = "0x37238DBA48b66EF982b40245483C16B9fd164BEE";
 
 export type Token = "stbleUSD" | "Bitcoin" | "Ethereum";
 
@@ -15,9 +15,9 @@ const tokenMap: Record<Token, number> = {
 };
 
 export const tokenAddressMap: Record<Token, Address> = {
-  stbleUSD: "0x85A923fb1d9FbC590B9615038217e117C790Bcb5",
-  Bitcoin: "0xdF86b1D12C34fBCC1b6D2A307B96Bdb4bf979c44",
-  Ethereum: "0xDECb0221A80602f621ae3B771B28423496a2CC2a",
+  stbleUSD: "0x73138793af75b21682af47DDCD1d078F2E570D2A",
+  Bitcoin: "0x9Bc447B589Fa4Fbde8d0037e472a1AFba1Cf8a48",
+  Ethereum: "0x02FA900A4b0eBBe3660d9B7EAdf1397C3E464F08",
 };
 
 export const useSwap = () => {

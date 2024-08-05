@@ -154,7 +154,7 @@ export const Box3 = () => {
             value={amount0}
             onChange={(e) => setAmount0(e.target.value)}
           />
-          <InputRightAddon>stbleUSD</InputRightAddon>
+          <InputRightAddon>{token0.data?.symbol}</InputRightAddon>
         </InputGroup>
       </Box>
       <Box mt={6}>
@@ -172,7 +172,7 @@ export const Box3 = () => {
             value={normalizedAmountsOut}
             placeholder="You will receive"
           />
-          <InputRightAddon>Bitcoin</InputRightAddon>
+          <InputRightAddon>{token1.data?.symbol}</InputRightAddon>
         </InputGroup>
       </Box>
       <Box mt={4}>
