@@ -30,7 +30,7 @@ export const useClaimTokens = () => {
     });
     return waitForTransactionReceipt(account, {
       hash: call,
-      confirmations: 3,
+      confirmations: 2,
     });
   };
 

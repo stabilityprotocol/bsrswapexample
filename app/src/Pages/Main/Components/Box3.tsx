@@ -12,7 +12,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import { useAccount, useBalance, useConnect, useReadContract } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useConnect,
+  useReadContract,
+  useToken,
+} from "wagmi";
 import {
   CONTRACT_ADDRESS,
   tokenAddressMap,
@@ -39,6 +45,14 @@ export const Box3 = () => {
   const token1 = useBalance({
     token: to,
     address,
+  });
+
+  const tokenInfo0 = useToken({
+    address: from,
+  });
+
+  const tokenInfo1 = useToken({
+    address: to,
   });
 
   const amountsOut = useReadContract({
@@ -142,7 +156,7 @@ export const Box3 = () => {
             onClick={() => setAmount0(token0.data?.formatted ?? "0")}
             cursor={"pointer"}
           >
-            Your {token0.data?.symbol} balance:{" "}
+            Your {tokenInfo0.data?.symbol} balance:{" "}
             <b>{token0.data?.formatted ?? 0}</b>
           </Text>
         </Flex>
@@ -154,14 +168,14 @@ export const Box3 = () => {
             value={amount0}
             onChange={(e) => setAmount0(e.target.value)}
           />
-          <InputRightAddon>{token0.data?.symbol}</InputRightAddon>
+          <InputRightAddon>{tokenInfo0.data?.symbol}</InputRightAddon>
         </InputGroup>
       </Box>
       <Box mt={6}>
         <Flex justifyContent={"space-between"}>
           <Text fontSize={"sm"}>You will receive</Text>
           <Text fontSize={"sm"}>
-            Your {token1.data?.symbol} balance:{" "}
+            Your {tokenInfo1.data?.symbol} balance:{" "}
             <b>{token1.data?.formatted ?? 0}</b>
           </Text>
         </Flex>
@@ -172,7 +186,7 @@ export const Box3 = () => {
             value={normalizedAmountsOut}
             placeholder="You will receive"
           />
-          <InputRightAddon>{token1.data?.symbol}</InputRightAddon>
+          <InputRightAddon>{tokenInfo1.data?.symbol}</InputRightAddon>
         </InputGroup>
       </Box>
       <Box mt={4}>

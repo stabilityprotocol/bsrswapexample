@@ -34,7 +34,7 @@ export const useSwap = () => {
     }).then((tx) => {
       return waitForTransactionReceipt(publicClient, {
         hash: tx,
-        confirmations: 3,
+        confirmations: 2,
       });
     });
   };
@@ -57,7 +57,7 @@ export const useSwap = () => {
     }).then((tx) => {
       return waitForTransactionReceipt(publicClient, {
         hash: tx,
-        confirmations: 3,
+        confirmations: 2,
       });
     });
   };
