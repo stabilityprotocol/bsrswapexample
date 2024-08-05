@@ -9,24 +9,61 @@ import {
   Input,
   InputRightAddon,
   Button,
+  useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useAccount, useBalance } from "wagmi";
-import { useSwap } from "../../../Hooks/useSwap";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount, useBalance, useConnect, useReadContract } from "wagmi";
+import {
+  CONTRACT_ADDRESS,
+  tokenAddressMap,
+  useSwap,
+} from "../../../Hooks/useSwap";
+import { SwapABI } from "../../../lib/ABI/Swap";
+import { Address, zeroAddress } from "viem";
+import { TokenABI } from "../../../lib/ABI/Token";
 
 export const Box3 = () => {
-  const [swapValue, setSwapValue] = useState("");
-  console.log("🚀 ~ Box3 ~ swapValue:", swapValue);
   const { address } = useAccount();
+  const [amount0, setAmount0] = useState("1000");
+  const [from, setFrom] = useState<Address>(tokenAddressMap["stbleUSD"]);
+  const [to, setTo] = useState<Address>(tokenAddressMap["Bitcoin"]);
+  const { swap, approve } = useSwap();
+  const toast = useToast();
+  const { connect, connectors } = useConnect();
+
   const token0 = useBalance({
-    token: "0x889bFD186352032376ECb29b115DE606Bb7B3fA6",
+    token: from,
     address,
   });
+
   const token1 = useBalance({
-    token: "0x2D88E769f1C7D1b37E30657f55d158EF394EBDBa",
+    token: to,
     address,
   });
-  const { staticSwap } = useSwap();
+
+  const amountsOut = useReadContract({
+    abi: SwapABI,
+    address: CONTRACT_ADDRESS,
+    functionName: "amountsOut",
+    args: [BigInt(Number(amount0) * 1e18), 2, 0],
+  });
+
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    abi: TokenABI,
+    address: from,
+    functionName: "allowance",
+    args: [address ?? zeroAddress, CONTRACT_ADDRESS],
+  });
+
+  const normalizedAmountsOut = useMemo(() => {
+    if (!amountsOut.data) return "Loading...";
+    return (Number(amountsOut.data) / 1e18).toString();
+  }, [amountsOut]);
+
+  const hasAllowance = useMemo(() => {
+    if (!allowance) return false;
+    return allowance >= BigInt(Number(amount0) * 1e18);
+  }, [allowance, amount0]);
 
   useEffect(() => {
     if (!address) return;
@@ -34,12 +71,57 @@ export const Box3 = () => {
     token1.refetch();
   }, [address, token1, token0]);
 
-  useEffect(() => {
-    staticSwap(100000000n, "stbleUSD", "Bitcoin").then((value) => {
-      console.log("🚀 ~ staticSwap ~ value:", value);
-      setSwapValue(value.toString());
+  const onApprove = async () => {
+    if (!address) {
+      connect({
+        connector: connectors[0],
+      });
+      toast({
+        title: "Please connect your wallet",
+        description: "You need to connect your wallet to approve",
+      });
+      return;
+    }
+    const p = approve(BigInt(Number(amount0) * 1e18), from);
+    toast.promise(p, {
+      loading: { title: "Approving...", description: "Please wait." },
+      success: {
+        title: "Approved",
+        description: "You can now swap.",
+      },
+      error: { title: "Error", description: "Could not approve." },
     });
-  }, [staticSwap]);
+
+    await p.then(() => {
+      refetchAllowance();
+    });
+  };
+
+  const onSwap = async () => {
+    if (!address) {
+      connect({
+        connector: connectors[0],
+      });
+      toast({
+        title: "Please connect your wallet",
+        description: "You need to connect your wallet to swap",
+      });
+      return;
+    }
+    const p = swap(BigInt(Number(amount0) * 1e18), from, to);
+    toast.promise(p, {
+      loading: { title: "Swapping...", description: "Please wait." },
+      success: {
+        title: "Swapped",
+        description: "You have successfully swapped your tokens.",
+      },
+      error: { title: "Error", description: "Could not swap." },
+    });
+    await p.then(() => {
+      token0.refetch();
+      token1.refetch();
+    });
+  };
 
   return (
     <Box p={4} w={["100vw", "xl"]} bg={"gray.700"} borderRadius={4}>
@@ -55,7 +137,11 @@ export const Box3 = () => {
       <Box mt={4}>
         <Flex justifyContent={"space-between"}>
           <Text fontSize={"sm"}>You will send</Text>
-          <Text fontSize={"sm"}>
+          <Text
+            fontSize={"sm"}
+            onClick={() => setAmount0(token0.data?.formatted ?? "0")}
+            cursor={"pointer"}
+          >
             Your {token0.data?.symbol} balance:{" "}
             <b>{token0.data?.formatted ?? 0}</b>
           </Text>
@@ -65,7 +151,8 @@ export const Box3 = () => {
             variant={"filled"}
             color={"gray.300"}
             placeholder="Amount of stbleUSD"
-            value={"1"}
+            value={amount0}
+            onChange={(e) => setAmount0(e.target.value)}
           />
           <InputRightAddon>stbleUSD</InputRightAddon>
         </InputGroup>
@@ -82,16 +169,22 @@ export const Box3 = () => {
           <Input
             variant={"filled"}
             color={"gray.300"}
-            value={"65000"}
+            value={normalizedAmountsOut}
             placeholder="You will receive"
           />
           <InputRightAddon>Bitcoin</InputRightAddon>
         </InputGroup>
       </Box>
       <Box mt={4}>
-        <Button colorScheme="teal" w={"100%"}>
-          Swap stbleUSD for Bitcoin
-        </Button>
+        {hasAllowance ? (
+          <Button colorScheme="teal" w={"100%"} onClick={() => onSwap()}>
+            Swap
+          </Button>
+        ) : (
+          <Button colorScheme="teal" w={"100%"} onClick={() => onApprove()}>
+            Approve
+          </Button>
+        )}
       </Box>
     </Box>
   );

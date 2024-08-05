@@ -3,6 +3,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { stbleTestnet } from "../lib/config";
 import { TokenABI } from "../lib/ABI/Token";
 import { waitForTransactionReceipt } from "viem/actions";
+import { tokenAddressMap } from "./useSwap";
 
 // 0x130cD1ab4eb857C6Ec878AB20637e26c8dA7a2c8
 const PK =
@@ -15,7 +16,7 @@ const account = createWalletClient({
 });
 
 const contract = getContract({
-  address: "0x889bFD186352032376ECb29b115DE606Bb7B3fA6",
+  address: tokenAddressMap["stbleUSD"],
   abi: TokenABI,
   client: {
     wallet: account,
@@ -24,11 +25,12 @@ const contract = getContract({
 
 export const useClaimTokens = () => {
   const claim = async (to: Address) => {
-    const call = await contract.write.transfer([to, 1000000000000000000n], {
+    const call = await contract.write.transfer([to, BigInt(1000 * 1e18)], {
       gasPrice: 0n,
     });
     return waitForTransactionReceipt(account, {
       hash: call,
+      confirmations: 3,
     });
   };
 

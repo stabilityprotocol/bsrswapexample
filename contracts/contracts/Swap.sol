@@ -59,7 +59,11 @@ contract Swap {
 
         // Adjust for decimal places and use scaling to maintain precision
         // Calculate in a way that minimizes overflow risk
-        uint256 amountTo = ((amount * priceFrom) / priceTo) * (10 ** DECIMALS);
+        uint256 amountTo = amount * priceFrom;
+        require(amountTo / amount == priceFrom, "Overflow detected"); // Check for overflow
+
+        amountTo = (amountTo / 1e18) * 1e18;
+        amountTo = amountTo / priceTo;
 
         return amountTo;
     }

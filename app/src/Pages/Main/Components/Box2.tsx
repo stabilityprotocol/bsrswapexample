@@ -1,11 +1,41 @@
 import { Box, Text, Heading, Button, useToast } from "@chakra-ui/react";
 import { useClaimTokens } from "../../../Hooks/useClaimTokens";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 
 export const Box2 = () => {
   const { address } = useAccount();
+  const { connect, connectors } = useConnect();
   const { claim } = useClaimTokens();
   const toast = useToast();
+
+  const onClaim = async () => {
+    if (!address) {
+      connect({
+        connector: connectors[0],
+      });
+      toast({
+        title: "Please connect your wallet",
+        description: "You need to connect your wallet to claim",
+      });
+      return;
+    }
+    const p = claim(address);
+    toast.promise(p, {
+      loading: {
+        title: "Claiming stbleUSD",
+        description: "Please wait...",
+      },
+      success: {
+        title: "stbleUSD claimed",
+        description:
+          "You have successfully claimed stbleUSD, your balance will be updated soon",
+      },
+      error: {
+        title: "Error claiming stbleUSD",
+        description: "There was an error claiming stbleUSD",
+      },
+    });
+  };
 
   return (
     <Box p={4} w={["100vw", "xl"]} bg={"gray.700"} borderRadius={4}>
@@ -17,38 +47,7 @@ export const Box2 = () => {
         below.
       </Text>
       <Box mt={4} textAlign={"center"}>
-        <Button
-          colorScheme="teal"
-          onClick={() => {
-            if (!address) {
-              toast({
-                title: "Connect your wallet",
-                description:
-                  "Please connect your wallet first to claim stbleUSD",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-              });
-              return;
-            }
-            const p = claim(address);
-            toast.promise(p, {
-              loading: {
-                title: "Claiming stbleUSD",
-                description: "Please wait...",
-              },
-              success: {
-                title: "stbleUSD claimed",
-                description:
-                  "You have successfully claimed stbleUSD, your balance will be updated soon",
-              },
-              error: {
-                title: "Error claiming stbleUSD",
-                description: "There was an error claiming stbleUSD",
-              },
-            });
-          }}
-        >
+        <Button colorScheme="teal" onClick={() => onClaim()}>
           Claim stbleUSD
         </Button>
       </Box>

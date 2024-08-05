@@ -3,7 +3,6 @@ import { useConnect } from "wagmi";
 
 export const ConnectButton = () => {
   const { connect, connectors, isPending } = useConnect();
-  console.log("🚀 ~ ConnectButton ~ isPending:", isPending);
   return (
     <Button
       colorScheme="teal"
@@ -15,7 +14,7 @@ export const ConnectButton = () => {
         });
       }}
     >
-      Connect Wallet
+      {isPending ? "Connecting..." : "Connect Wallet"}
     </Button>
   );
 };
