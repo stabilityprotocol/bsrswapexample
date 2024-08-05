@@ -8,7 +8,7 @@ const deployment = buildModule("TokenSwap", (m) => {
   const oracleAddress = "0xC26CeeFd4e58288e44CDC445D23D43D5202983f9";
 
   // Deploy TokenSwap
-  const threeSwap = m.contract("ThreeSwap", [wbtc, weth, usdc, oracleAddress]);
+  const threeSwap = m.contract("Swap", [wbtc, weth, usdc, oracleAddress]);
 
   // Mint 1,000,000,000 tokens and send to TokenSwap
   const mintAmount = parseInt("1000000000", 18); // 1,000,000,000 with 18 decimals
