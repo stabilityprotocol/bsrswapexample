@@ -20,10 +20,10 @@ export const stbleTestnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://free.testnet.stabilityprotocol.com/zgt/qi0bkb4slew0"],
+      http: ["https://testnet.stabilityprotocol.com"],
     },
     public: {
-      http: ["https://free.testnet.stabilityprotocol.com/zgt/qi0bkb4slew0"],
+      http: ["https://testnet.stabilityprotocol.com"],
     },
   },
   contracts: {
@@ -31,6 +31,18 @@ export const stbleTestnet = defineChain({
       // https://raw.githubusercontent.com/mds1/multicall/main/src/Multicall3.sol
       address: "0xE7a1350378C3f6E5DcEA9084120894bA86784CFd",
       blockCreated: 6534150,
+    },
+  },
+});
+
+export const freeStbleTestnet = defineChain({
+  ...stbleTestnet,
+  rpcUrls: {
+    default: {
+      http: ["https://free.testnet.stabilityprotocol.com"],
+    },
+    public: {
+      http: ["https://free.testnet.stabilityprotocol.com"],
     },
   },
 });

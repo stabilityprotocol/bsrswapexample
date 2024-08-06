@@ -1,6 +1,6 @@
 import { useClient, useWriteContract } from "wagmi";
 import { SwapABI } from "../lib/ABI/Swap";
-import { Address } from "viem";
+import { Address, parseGwei } from "viem";
 import { TokenABI } from "../lib/ABI/Token";
 import { waitForTransactionReceipt } from "viem/actions";
 
@@ -31,6 +31,7 @@ export const useSwap = () => {
       address: token,
       functionName: "approve",
       args: [CONTRACT_ADDRESS, amount],
+      maxFeePerGas: parseGwei("1"),
     }).then((tx) => {
       return waitForTransactionReceipt(publicClient, {
         hash: tx,
@@ -54,6 +55,7 @@ export const useSwap = () => {
       address: CONTRACT_ADDRESS,
       functionName: "swap",
       args: [amount, tokenMap[fromTokenName], tokenMap[toTokenName]],
+      maxFeePerGas: parseGwei("1"),
     }).then((tx) => {
       return waitForTransactionReceipt(publicClient, {
         hash: tx,

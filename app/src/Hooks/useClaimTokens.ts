@@ -1,6 +1,6 @@
 import { Address, createWalletClient, getContract, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { stbleTestnet } from "../lib/config";
+import { freeStbleTestnet } from "../lib/config";
 import { TokenABI } from "../lib/ABI/Token";
 import { waitForTransactionReceipt } from "viem/actions";
 import { tokenAddressMap } from "./useSwap";
@@ -11,7 +11,7 @@ const PK =
 
 const account = createWalletClient({
   account: privateKeyToAccount(PK),
-  chain: stbleTestnet,
+  chain: freeStbleTestnet,
   transport: http(),
 });
 

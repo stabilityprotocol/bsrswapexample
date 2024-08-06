@@ -16,7 +16,7 @@ export const Header = () => {
       <Box width={"100%"}>
         <img src={StabilityWhite} alt="Stability White" />
       </Box>
-      <Box width={"30%"}>
+      <Box width={"100%"} display={"flex"} justifyContent={"flex-end"}>
         <AccountWidget />
       </Box>
     </Flex>

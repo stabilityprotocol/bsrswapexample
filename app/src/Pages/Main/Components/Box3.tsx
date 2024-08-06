@@ -134,6 +134,7 @@ export const Box3 = () => {
     await p.then(() => {
       token0.refetch();
       token1.refetch();
+      refetchAllowance();
     });
   };
 
@@ -144,7 +145,7 @@ export const Box3 = () => {
         if (data.type !== "update") return;
         token0.refetch();
       } catch (e) {
-        console.error("IGNORE THIS:", e);
+        // do nothing
       }
     };
     window.addEventListener("message", fn);
