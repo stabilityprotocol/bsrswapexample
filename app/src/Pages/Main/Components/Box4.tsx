@@ -23,7 +23,9 @@ export const Box4 = () => {
       try {
         const data = JSON.parse(ev.data) as { type: string };
         if (data.type !== "update") return;
-        getUsdRewards.refetch();
+        setTimeout(() => {
+          getUsdRewards.refetch();
+        }, 2_000);
       } catch (e) {
         // do nothing
       }
