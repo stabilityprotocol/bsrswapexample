@@ -20,10 +20,10 @@ export const stbleTestnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://testnet.stabilityprotocol.com"],
+      http: ["https://rpc.testnet.stabilityprotocol.com/zgt/try-it-out"],
     },
     public: {
-      http: ["https://testnet.stabilityprotocol.com"],
+      http: ["https://rpc.testnet.stabilityprotocol.com/zgt/try-it-out"],
     },
   },
   contracts: {
